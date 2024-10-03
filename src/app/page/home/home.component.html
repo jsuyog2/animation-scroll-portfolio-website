@@ -1,0 +1,152 @@
+
+
+    <!-- Main Section -->
+    <div class="row px-md-5 min-vh-100 banner-section align-content-center section">
+
+        <div class="first-col col-12 mb-4 col-md-4 align-content-center">
+            <div class="banner-title text-center text-md-end">
+                <h3 class="banner-text sub-text">Hello! I'm</h3>
+                <h3 id="title-name" class="banner-text"></h3>
+            </div>
+        </div>
+        <div class="col-12 mb-4 col-md-4 align-content-center">
+            <div class="banner-pic">
+                <img class="profile-pic" src="profile.png" />
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
+        </div>
+        <div class="last-col col-12 mb-4 col-md-4 align-content-center text-center text-md-start">
+            <span class="banner-bottom-text">I'm a <strong
+                    class="inside-bottom-text">{{subHeaderArray[0]}}</strong></span>
+        </div>
+    </div>
+
+
+
+    <!-- About Section -->
+    <div class="row px-md-5 py-5 min-vh-100 about-section align-content-center section">
+        <div class="col-12 align-content-center text-center text-md-start">
+            <div class="about-section-header">
+                <h1 class="scrollingText animate">
+                    <span>a</span>
+                </h1>
+            </div>
+            <div class="about-section-text align-content-center d-flex flex-column align-md-content-start d-md-block">
+                <p class="about-text" [innerHTML]="data.aboutme">
+                </p>
+            </div>
+            <div class="bottom-btn">
+                <button id="cvButton" class="btn btn-value align-self-center" data-hover='Donwload CV'
+                    (onClick)="socialOpen('cv')">
+                    <div class="draw-svg"></div> Donwload CV
+                </button>
+            </div>
+        </div>
+        <div class="col-12 align-content-center text-center text-md-start">
+            <div class="row mt-2 counts-sub-section align-content-center">
+                <div class="col-12">
+                    <div class="row justify-content-center my-5">
+                        <div class="col-md-4 col-12 overflow-hidden" *ngFor="let item of services">
+                            <div class="row justify-content-center counts-value">
+                                <div class="col-4 text-center align-self-center">
+                                    <i [class]="item.icon"></i>
+                                </div>
+                                <div class="col-5">
+                                    <h1 [class]="item.class + ' counts'">0</h1>
+                                    <h6>{{item.text}}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- skill section -->
+    <div class="row min-vh-100 expertise-section align-content-center p-0 section">
+        <div class="col-12 panel expertise-section-header text-center text-md-start">
+            <h1 class="scrollingText animate">
+                <span>Discover </span>
+            </h1>
+        </div>
+        <div class="col-12 panel" *ngFor="let item of data.skills">
+            <div class="row align-content-center">
+                <h1>{{item.header}}</h1>
+                <div class="col-12">
+                    <p><i [class]="item.icon"></i> {{item.value}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 panel expertise-section-end-header text-center justify-content-center">
+            <h1 class="scrollingText">
+                <span>Check out some of my projects</span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- about section -->
+    <div class="row px-md-5 py-5 min-vh-100 contact-section align-content-center position-relative section">
+        <div class="col-12 text-center p-5 border rounded">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="header-title">Looking for a new talent?</h1>
+                </div>
+                <div class="col-12">
+                    <h1 class="scrollingText animate">
+                        <span ngxClipboard [cbContent]="data.contact?.value" (mouseenter)="toggleCursorEvent()"
+                            (mouseleave)="toggleCursorEvent()">jsuyog2</span>
+                    </h1>
+                </div>
+                <div class="col-12 mt-5">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="bottom-btn">
+                                <button class="cvButton contact-section-btn btn btn-value" data-hover="Donwload CV"
+                                    (onClick)="socialOpen('cv')">
+                                    <div class="draw-svg"></div> Donwload CV
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="bottom-btn">
+                                <button class="linkedInButton contact-section-btn btn btn-value" data-hover="LinkedIn"
+                                    (onClick)="socialOpen('cv')">
+                                    <div class="draw-svg"></div> LinkedIn
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="bottom-btn">
+                                <button class="githubButton contact-section-btn btn btn-value" data-hover="Github"
+                                    (onClick)="socialOpen('cv')">
+                                    <div class="draw-svg"></div> Github
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="bottom-btn">
+                                <button class="xButton contact-section-btn btn btn-value" (onClick)="socialOpen('cv')"
+                                    data-hover="X">
+                                    <div class="draw-svg"></div> X
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer p-5">
+            <div class="row text-center">
+                <div class="col-12 col-md-4 h-vh-75"><span>©2024 Suyog Jadhav.</span></div>
+                <div class="col-12 col-md-4"> <span class="position-relative"><span class="available"></span>Available
+                        for a
+                        full-time position</span>
+                </div>
+                <div class="col-12 col-md-4"><span>Made by Suyog Jadhav.</span></div>
+            </div>
+        </div>
+    </div>

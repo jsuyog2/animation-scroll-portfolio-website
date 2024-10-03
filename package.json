@@ -1,6 +1,6 @@
 {
-  "name": "animation-scroll-portfolio-website",
-  "version": "0.0.0",
+  "name": "suyog-jadhav",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -18,9 +18,19 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@types/gsap": "^3.0.0",
+    "@types/three": "^0.169.0",
+    "bootstrap": "^5.3.3",
+    "cursor-effects": "^1.0.15",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.13",
+    "ngx-clipboard": "^16.0.0",
+    "primeicons": "^7.0.0",
+    "primeng": "^17.18.10",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.14.3"
+    "three": "^0.169.0",
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.0.6",

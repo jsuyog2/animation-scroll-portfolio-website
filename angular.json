@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "animation-scroll-portfolio-website": {
+    "suyog-jadhav": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,11 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/animation-scroll-portfolio-website",
+            "outputPath": "dist/suyog-jadhav",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -64,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "animation-scroll-portfolio-website:build:production"
+              "buildTarget": "suyog-jadhav:build:production"
             },
             "development": {
-              "buildTarget": "animation-scroll-portfolio-website:build:development"
+              "buildTarget": "suyog-jadhav:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,8 +78,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
-              "zone.js",
-              "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
@@ -98,5 +95,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "062ee7f2-1615-4ffb-a608-5378c183549a"
   }
 }
