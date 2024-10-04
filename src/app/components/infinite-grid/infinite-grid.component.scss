@@ -5,3 +5,17 @@
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 }
+
+.content-box {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    width: 90.1vmin;
+    cursor: pointer;
+    font-size: 0;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    max-height: 100%;
+    overflow: auto;
+}

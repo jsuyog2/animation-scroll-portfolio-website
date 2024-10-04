@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import gsap from 'gsap';
-import { Draggable } from 'gsap/all';
+import { Draggable, Flip } from 'gsap/all';
 @Component({
   selector: 'app-infinite-grid',
   standalone: true,
@@ -43,7 +43,9 @@ export class InfiniteGridComponent {
   horizOffset: any;
   vertOffset: any;
 
-  @Input('useInertia') useInertia = true;
+  selectedData: any;
+
+  @Input('useInertia') useInertia = false;
   @Input('useCenterGrid') useCenterGrid = true;
   ngOnInit() {
     this.contentNum = this.data.length;
@@ -54,7 +56,7 @@ export class InfiniteGridComponent {
     this.rowNum = this.tags.length;
   }
   ngAfterViewInit() {
-    gsap.registerPlugin(Draggable);
+    gsap.registerPlugin(Draggable, Flip);
     this.intialGrid();
   }
 
@@ -72,43 +74,55 @@ export class InfiniteGridComponent {
     this.resize();
     window.addEventListener("resize", () => { this.resize() });
   }
+  openContentBox(elems: any, selectedElem: any) {
+    gsap.to(selectedElem, { opacity: 0.3, stagger: { amount: 0.7, from: elems.indexOf(selectedElem), grid: "auto" } }).kill(selectedElem);
+    gsap.to('.content-box', { backgroundColor: "#888", duration: 1, delay: 0.3 });
+  }
 
+  closeContentBox(selectedElem: any) {
+    const element: any = document.querySelector('.content-box');
+    Flip.fit(element, selectedElem, { scale: true });
+    const state = Flip.getState(element);
+    gsap.set(element, { clearProps: true });
+    gsap.set(element, { xPercent: -50, top: "50%", yPercent: -50, visibility: "visible", overflow: "hidden" });
+    Flip.from(state, {
+      duration: 0.5,
+      ease: "power2.inOut",
+      scale: true,
+      onComplete: function () { gsap.set(element, { overflow: "auto" }) }
+    })
+      .to(selectedElem, { yPercent: 0 }, 0.2);
+  }
   createImageGrid() {
     var maxLength = 4
     for (let y = 0; y < (this.rowNum); y++) {
       const title = this.titles[this.tags[y]]
       const items = this.data.filter(val => val.tag === this.tags[y]);
-
       maxLength = items.length > maxLength ? items.length : maxLength;
-
-      // this.addTitle(title)
       let row = document.createElement("div");
       row.className = this.rowClass;
-
-      this.contentNum = items.length
+      this.contentNum = maxLength;
       for (let x = 0; x < (maxLength); x++) {
         let div = document.createElement("div");
         div.className = this.divClass;
         div.id = `content${y}${x}`;
         const item = items[x % items.length];
         div.innerHTML = `
-          <h5>${title}</h5>
-          <div id="content${y}${x}" data-pc-name="card" class="p-card p-component">
-          <div class="p-card-body">
-          <div class="p-card-subtitle">
-          ${item?.duration}
-          </div>
-          <div class="p-card-title">${item?.title}</div>
-          <div class="p-card-content">
-          <p class="m-0 truncate-text">${item?.description}</p>
-          </div>
-          </div>
-          </div>`
+            <h4>${title}</h4>
+            <div id="content${y}${x}" data-row="${this.tags[y]}" data-index="${x % items.length}" class="p-card p-component">
+            <div class="p-card-body">
+            <div class="p-card-subtitle">
+            ${item?.duration}
+            </div>
+            <div class="p-card-title">${item?.title}</div>
+            <div class="p-card-content">
+            <p class="m-0 truncate-text">${item?.description}</p>
+            </div>
+            </div>
+            </div>`
         row.appendChild(div);
-
+        document.querySelector(`#${this.containerId}`)?.appendChild(row);
       }
-      document.querySelector(`#${this.containerId}`)?.appendChild(row);
-
       this.contentRep.push(gsap.utils.toArray(row.querySelectorAll(`.${this.divClass}`)));
     }
 
@@ -156,13 +170,13 @@ export class InfiniteGridComponent {
     if (this.useInertia) {
       options.inertia = true;
       options.onThrowUpdate = () => {
-        this.updateCenterElem;
+        this.updateCenterElem();
       }
       if (this.useCenterGrid) {
-        options.onThrowComplete = () => { this.centerGrid; }
+        options.onThrowComplete = () => { this.centerGrid(); }
       }
     } else if (this.useCenterGrid) { // No inertia
-      options.onDragEnd = () => { this.centerGrid; }
+      options.onDragEnd = () => { this.centerGrid(); }
     }
 
     return Draggable.create(`#${this.containerId}`, options);
@@ -172,9 +186,6 @@ export class InfiniteGridComponent {
 
 
     let elems = document.elementsFromPoint(this.winMidX, this.winMidY);
-
-    console.log(elems);
-
     elems.forEach(elem => {
 
       if (elem.matches(`.${this.divClass}`) && !this.lastCenteredElem.isSameNode(elem)) {
