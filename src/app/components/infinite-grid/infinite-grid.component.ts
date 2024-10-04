@@ -43,6 +43,7 @@ export class InfiniteGridComponent {
   horizOffset: any;
   vertOffset: any;
 
+  selectedElem: any;
   selectedData: any;
 
   @Input('useInertia') useInertia = false;
@@ -67,32 +68,74 @@ export class InfiniteGridComponent {
     this.createMask();
     this.lastCenteredElem = document.querySelectorAll(`.${this.divClass}`)[(this.rowMidIndex - 1) * this.contentNum + this.contentMidIndex];
 
-    this.createDraggable();
+    let drag: any = this.createDraggable();
 
     this.setStyles();
 
     this.resize();
     window.addEventListener("resize", () => { this.resize() });
-  }
-  openContentBox(elems: any, selectedElem: any) {
-    gsap.to(selectedElem, { opacity: 0.3, stagger: { amount: 0.7, from: elems.indexOf(selectedElem), grid: "auto" } }).kill(selectedElem);
-    gsap.to('.content-box', { backgroundColor: "#888", duration: 1, delay: 0.3 });
+
+    window.addEventListener("click", (e) => {
+      const x = e.pageX;
+      const y = e.pageY;
+      var selectedElem: any;
+      let elems = document.elementsFromPoint(x, y);
+      elems.forEach(elem => {
+        if (elem.matches(`.${this.divClass}`)) {
+          selectedElem = elem.children[1]
+        }
+      });
+      if (selectedElem) {
+        const index = selectedElem.getAttribute('data-index');
+        const row = selectedElem.getAttribute('data-row');
+        const items = this.data.filter(val => val.tag === row);
+        const data = items[index]
+        const details = document.querySelector('.detail');
+        this.selectedElem = selectedElem;
+        this.openCard(details, drag, data)
+      }
+    })
   }
 
-  closeContentBox(selectedElem: any) {
-    const element: any = document.querySelector('.content-box');
-    Flip.fit(element, selectedElem, { scale: true });
-    const state = Flip.getState(element);
-    gsap.set(element, { clearProps: true });
-    gsap.set(element, { xPercent: -50, top: "50%", yPercent: -50, visibility: "visible", overflow: "hidden" });
+  openCard(details: any, drag: any, data: any) {
+    const self: any = this;
+    this.selectedData = data;
+    document.addEventListener('click', closeCard);
+    Flip.fit(details, this.selectedElem, { scale: true });
+    const state = Flip.getState(details);
+    gsap.set(details, { clearProps: true });
+    gsap.set(details, { xPercent: 0, yPercent: 0, visibility: "visible", overflow: "hidden" });
+    gsap.to(details, { opacity: 1 })
     Flip.from(state, {
       duration: 0.5,
       ease: "power2.inOut",
       scale: true,
-      onComplete: function () { gsap.set(element, { overflow: "auto" }) }
-    })
-      .to(selectedElem, { yPercent: 0 }, 0.2);
+      onComplete: function () { gsap.set(details, { overflow: "auto" }) }
+    }).to(details, { yPercent: 0 }, 0.2);
+    drag[0].disable()
+
+    function closeCard() {
+      document.removeEventListener('click', closeCard);
+
+      gsap.set(details, { overflow: "hidden" });
+      const state = Flip.getState(details);
+      Flip.fit(details, self.selectedElem, { scale: true });
+      const tl = gsap.timeline();
+      tl.set(details, { overflow: "hidden" });
+      Flip.from(state, {
+        scale: true,
+        duration: 0.5,
+        delay: 0.2,
+        onInterrupt: function () { tl.kill() }
+      })
+        .to(details, { opacity: 0 })
+        .to(details, { visibility: "hidden" });
+      drag[0].enable();
+      self.selectedElem = null;
+      self.selectedData = null;
+    }
   }
+
   createImageGrid() {
     var maxLength = 4
     for (let y = 0; y < (this.rowNum); y++) {
