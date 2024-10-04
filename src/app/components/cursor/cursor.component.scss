@@ -38,6 +38,30 @@ html {
   }
 }
 
+.open-cursor {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  border: 1px solid #fff;
+  pointer-events: none;
+  z-index: 1000;
+  transform: translate(-50px, -50px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0px 0px 5px #000;
+
+  span {
+    transform: scale(1);
+  }
+}
+
 @keyframes cursorAnim3 {
   0% {
     transform: scale(1);

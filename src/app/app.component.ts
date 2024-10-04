@@ -15,7 +15,8 @@ import { CursorService } from './services/cursor.service';
 })
 export class AppComponent {
   title = 'Suyog Jadhav';
-  enableCursor = false;
+  enableCopyCursor = false;
+  enableOpenCursor = false;
 
   constructor(private cursor: CursorService) { }
 
@@ -33,7 +34,11 @@ export class AppComponent {
     gsap.ticker.lagSmoothing(0)
 
     this.cursor.getenableCopyCursor().subscribe((value) => {
-      this.enableCursor = value
+      this.enableCopyCursor = value
+    })
+
+    this.cursor.getenableOpenCursor().subscribe((value) => {
+      this.enableOpenCursor = value
     })
   }
 

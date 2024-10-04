@@ -1,6 +1,8 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { rainbowCursor } from 'cursor-effects';
 import gsap from 'gsap';
 import { Draggable, Flip } from 'gsap/all';
+import { CursorService } from '../../services/cursor.service';
 @Component({
   selector: 'app-infinite-grid',
   standalone: true,
@@ -10,6 +12,7 @@ import { Draggable, Flip } from 'gsap/all';
   encapsulation: ViewEncapsulation.None
 })
 export class InfiniteGridComponent {
+  color = '#399dd2';
   @Input('data') data: any[] = [];
   containerId: string = "grid-container";
   rowClass: string = 'row'
@@ -47,6 +50,7 @@ export class InfiniteGridComponent {
 
   @Input('useInertia') useInertia = false;
   @Input('useCenterGrid') useCenterGrid = true;
+  constructor(private cursor: CursorService) { }
   ngOnInit() {
     this.contentNum = this.data.length;
     this.tags = [...new Set(this.data.map((val: any) => {
@@ -60,6 +64,14 @@ export class InfiniteGridComponent {
     setTimeout(() => {
       this.intialGrid();
     }, 1);
+
+    const elem: any = document.querySelector('.detail');
+    rainbowCursor({
+      element: elem,
+      length: 10,
+      colors: [this.color],
+      size: 5,
+    });
 
   }
 
@@ -78,6 +90,21 @@ export class InfiniteGridComponent {
     window.addEventListener("resize", () => { this.resize() });
     this.initializeCardClickEvent(drag)
 
+    window.addEventListener('mousemove', (e) => {
+      var x = e.pageX;
+      var y = e.pageY;
+      let elems = document.elementsFromPoint(x, y);
+      const elem = elems.filter((val) => val.matches(`.${this.divClass}`));
+      if (elems[0].matches(`div.mask`)) {
+        if (elem.length !== 0) {
+          this.cursor.enableOpenCursor(true);
+        } else {
+          this.cursor.enableOpenCursor(false);
+        }
+      } else {
+        this.cursor.enableOpenCursor(false);
+      }
+    })
   }
 
   initializeCardClickEvent(drag: any) {
@@ -86,7 +113,10 @@ export class InfiniteGridComponent {
 
 
 
-    const closeCard = (e: any) => {
+    const closeCard = (e: any, forceClose: boolean = false) => {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
       var x = e.pageX;
       var y = e.pageY;
       if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
@@ -95,7 +125,8 @@ export class InfiniteGridComponent {
         y = touch.pageY;
       }
       let elems = document.elementsFromPoint(x, y);
-      if (!elems[0]?.matches('#closeBtn')) {
+
+      if (!elems[0]?.matches('#closeBtn') && !forceClose) {
         return
       }
 
@@ -130,6 +161,11 @@ export class InfiniteGridComponent {
       if (selectedElem) {
         return closeCard(e);
       }
+
+      const detailOpacity = gsap.getProperty('.detail', 'opacity')
+      if (detailOpacity !== 0) {
+        return
+      }
       var x = e.pageX;
       var y = e.pageY;
       if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
@@ -145,11 +181,8 @@ export class InfiniteGridComponent {
       }
 
       let elems = document.elementsFromPoint(x, y);
-      elems.forEach(elem => {
-        if (elem.matches(`.${this.divClass}`)) {
-          selectedElem = elem.children[1]
-        }
-      });
+      const elem = elems.filter((val) => val.matches(`.${this.divClass}`));
+      selectedElem = elem[0]?.children[1]
 
       if (selectedElem) {
         const index = selectedElem.getAttribute('data-index');
@@ -176,20 +209,42 @@ export class InfiniteGridComponent {
         drag[0].disable()
       }
     }
+    const backdrop: any = document.querySelector('.detail');
 
+
+    backdrop.onclick = (e: any) => {
+      if (e.target.className === 'detail') {
+        closeCard(e, true)
+      }
+    }
     window.onclick = openCard
     window.ontouchend = openCard
   }
 
   addValues(data: any) {
     const title: any = document.querySelector('.content h3.title span')
+    const link: any = document.querySelector('.content h3.title #external-link')
+    const linkText: any = document.querySelector('.content h3.title #external-link-text')
     const duration: any = document.querySelector('.content p.duration var')
     const description: any = document.querySelector('.content ul.description')
     const responsibility: any = document.querySelector('.content ul.responsibility')
     const technologies: any = document.querySelector('.content div.technologies')
 
+
     title.innerHTML = data.title
     duration.innerHTML = data.duration
+
+    if (this.validURL(data.Link)) {
+      link.classList.remove('d-none');
+      linkText.classList.add('d-none')
+      link.onclick = () => {
+        window.open(data.Link)
+      }
+    } else {
+      link.classList.add('d-none');
+      linkText.classList.remove('d-none')
+      linkText.innerHTML = data.Link
+    }
 
     const descriptionData = data.description?.map((val: any) => `<li>${val}</li>`).join('')
     description.innerHTML = descriptionData
@@ -199,6 +254,7 @@ export class InfiniteGridComponent {
 
     const technologiesData = data.tech?.map((val: any) => `<div class="tech d-flex flex-column justify-content-center align-items-center p-3"><img class="w-50" src="${val.icon}"/><label class="fw-medium text-center">${val.title}</label></div>`).join('')
     technologies.innerHTML = technologiesData
+
   }
 
   createImageGrid() {
@@ -217,7 +273,7 @@ export class InfiniteGridComponent {
         const item = items[x % items.length];
         div.innerHTML = `
             <h4>${title}</h4>
-            <div id="content${y}${x}" data-row="${this.tags[y]}" data-index="${x % items.length}" class="p-card p-component">
+            <div id="content${y}${x}" data-row="${this.tags[y]}" data-index="${x % items.length}" class="p-card p-component shadow">
             <div class="p-card-body">
             <div class="p-card-subtitle">
             ${item?.duration}
@@ -492,5 +548,18 @@ export class InfiniteGridComponent {
       // Update our representation of the rows
       this.rowArray[i] = row;
     });
+  }
+
+  validURL(str: any) {
+    var pattern = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
+      'i'
+    ); // fragment locator
+    return !!pattern.test(str);
   }
 }

@@ -14,31 +14,26 @@ import { EasePack, TextPlugin } from 'gsap/all';
 })
 export class CursorComponent {
   @Input('enable-copy-cursor') copyCursor: boolean = true;
+  @Input('enable-open-cursor') openCursor: boolean = true;
   color = '#399dd2';
-  xSetter: any;
-  ySetter: any;
+  xCopySetter: any;
+  yCopySetter: any;
+  xOpenSetter: any;
+  yOpenSetter: any;
   time = 0;
   duration = Math.max(0.5, 6 * 0.08);
-  copyElement = '.copy-cursor span';
-  element: any;
   tl = gsap.timeline({ delay: 0.6, scrub: true, });
   constructor() { }
   ngOnInit() {
-
-    rainbowCursor({
-      length: 10,
-      colors: [this.color],
-      size: 5,
-    });
 
   }
 
   ngAfterViewInit() {
     gsap.registerPlugin(TextPlugin, EasePack)
-    this.xSetter = gsap.quickSetter(".copy-cursor", "x", "px")
-    this.ySetter = gsap.quickSetter(".copy-cursor", "y", "px")
+    this.xCopySetter = gsap.quickSetter(".copy-cursor", "x", "px")
+    this.yCopySetter = gsap.quickSetter(".copy-cursor", "y", "px")
 
-    const texts = gsap.utils.toArray(".text-p");
+    const texts = gsap.utils.toArray(".copy-cursor .text-p");
     texts.forEach((text: any, index) => {
       this.tl.from(text, { opacity: 1, scale: 0, autoAlpha: 0, duration: .1 },)
         .addPause()
@@ -47,6 +42,15 @@ export class CursorComponent {
           { opacity: 0, scale: 5, autoAlpha: 0, duration: .1 },
           ">+=1"
         );
+    });
+
+    this.xOpenSetter = gsap.quickSetter(".open-cursor", "x", "px")
+    this.yOpenSetter = gsap.quickSetter(".open-cursor", "y", "px")
+
+    rainbowCursor({
+      length: 10,
+      colors: [this.color],
+      size: 5,
     });
   }
 
@@ -63,7 +67,7 @@ export class CursorComponent {
     if (this.copyCursor) {
       this.tl.play(1);
     }
-    if (!this.copyCursor) {
+    if (!this.copyCursor && !this.openCursor) {
       this.expand = true;
       setTimeout(() => {
         this.expand = false;
@@ -73,9 +77,12 @@ export class CursorComponent {
 
   @HostListener('document:mousemove', ['$event'])
   onMousemove($event: any) {
-    this.xSetter($event.pageX - 0)
-    this.ySetter($event.pageY - 0)
-    
+    this.xCopySetter($event.pageX - 0)
+    this.yCopySetter($event.pageY - 0)
+
+    this.xOpenSetter($event.pageX - 0)
+    this.yOpenSetter($event.pageY - 0)
+
     this.top = ($event.pageY - 10) + "px";
     this.left = ($event.pageX - 10) + "px";
   }

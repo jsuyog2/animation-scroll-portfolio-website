@@ -1,8 +1,13 @@
 <div id="grid-container"></div>
 
 <div class="detail" data-flip-id=".detail">
-    <div class="content p-3">
-        <h3 class="title d-flex"><span class="flex-fill"></span> <i class="fa fa-external-link-square text-primary fs-4 mx-2"></i><i id="closeBtn" class="fa fa-close text-body-secondary fs-4 mx-2"></i></h3>
+    <div class="content p-3 shadow">
+        <h3 class="title d-flex">
+            <span class="flex-fill"></span>
+            <i id="external-link" class="fa fa-external-link-square text-primary fs-4 mx-2 d-none"></i>
+            <span id="external-link-text" class="text-primary mx-2 d-none"></span>
+            <i id="closeBtn" class="fa fa-close text-body-secondary fs-4 mx-2"></i>
+        </h3>
         <p class="duration"><var></var></p>
         <label class="fw-medium">Description</label>
         <ul class="description"></ul>
