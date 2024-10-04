@@ -21,6 +21,10 @@
     overflow: auto;
     justify-content: center;
     align-items: center;
+    background-color: #00000059;
+    opacity: 0;
+    z-index: 10000;
+    cursor: auto;
 
     .content {
         width: 80vw;
@@ -28,5 +32,9 @@
         background-color: white;
         color: black;
         border-radius: 10px;
+
+        #closeBtn{
+            cursor: pointer;
+        }
     }
 }

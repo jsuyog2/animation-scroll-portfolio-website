@@ -43,8 +43,7 @@ export class InfiniteGridComponent {
   horizOffset: any;
   vertOffset: any;
 
-  selectedElem: any;
-  selectedData: any;
+  selectedElem: any = null;
 
   @Input('useInertia') useInertia = false;
   @Input('useCenterGrid') useCenterGrid = true;
@@ -58,7 +57,10 @@ export class InfiniteGridComponent {
   }
   ngAfterViewInit() {
     gsap.registerPlugin(Draggable, Flip);
-    this.intialGrid();
+    setTimeout(() => {
+      this.intialGrid();
+    }, 1);
+
   }
 
   intialGrid() {
@@ -74,66 +76,129 @@ export class InfiniteGridComponent {
 
     this.resize();
     window.addEventListener("resize", () => { this.resize() });
+    this.initializeCardClickEvent(drag)
 
-    window.addEventListener("click", (e) => {
-      const x = e.pageX;
-      const y = e.pageY;
-      var selectedElem: any;
+  }
+
+  initializeCardClickEvent(drag: any) {
+    var selectedElem: any;
+    const details: any = document.querySelector('.content');
+
+
+
+    const closeCard = (e: any) => {
+      var x = e.pageX;
+      var y = e.pageY;
+      if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+        const touch = e.touches[0] || e.changedTouches[0];
+        x = touch.pageX;
+        y = touch.pageY;
+      }
+      let elems = document.elementsFromPoint(x, y);
+      if (!elems[0]?.matches('#closeBtn')) {
+        return
+      }
+
+      gsap.set(details, { overflow: "hidden" });
+      const state = Flip.getState(details);
+      Flip.fit(details, selectedElem, { scale: true, fade: true });
+      const tl = gsap.timeline();
+      tl.set(details, { overflow: "hidden" });
+      details.classList.toggle('active')
+      Flip.from(state, {
+        scale: true,
+        fade: true,
+        duration: 0.5,
+        delay: 0.2,
+        onInterrupt: function () {
+          tl.kill()
+        }
+      })
+        .to(details, { opacity: 0 })
+        .to(details, { visibility: "hidden" });
+      gsap.to('.detail', { opacity: 0 })
+      gsap.set('.detail', { visibility: 'hidden' })
+      drag[0].enable();
+      selectedElem = null;
+    }
+
+    const openCard = (e: any) => {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+
+      if (selectedElem) {
+        return closeCard(e);
+      }
+      var x = e.pageX;
+      var y = e.pageY;
+      if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+        const touch = e.touches[0] || e.changedTouches[0];
+        if (e.targetTouches.length > 1) {
+          return;
+        }
+        x = touch.pageX;
+        y = touch.pageY;
+      } else {
+        x = e.pageX;
+        y = e.pageY;
+      }
+
       let elems = document.elementsFromPoint(x, y);
       elems.forEach(elem => {
         if (elem.matches(`.${this.divClass}`)) {
           selectedElem = elem.children[1]
         }
       });
+
       if (selectedElem) {
         const index = selectedElem.getAttribute('data-index');
         const row = selectedElem.getAttribute('data-row');
-        const items = this.data.filter(val => val.tag === row);
+        const items = this.data.filter((val: any) => val.tag === row);
         const data = items[index]
-        const details = document.querySelector('.detail');
-        this.selectedElem = selectedElem;
-        this.openCard(details, drag, data)
+        this.addValues(data)
+        details.classList.toggle('active')
+        Flip.fit(details, selectedElem, { scale: true, fade: true });
+        const state = Flip.getState(details);
+
+        gsap.set(details, { clearProps: true });
+        gsap.set('.detail', { visibility: 'visible' })
+        gsap.to('.detail', { opacity: 1 })
+        gsap.set(details, { xPercent: 0, yPercent: 0, visibility: "visible", overflow: "hidden" });
+        gsap.to(details, { opacity: 1 })
+        Flip.from(state, {
+          duration: 0.5,
+          ease: "power2.inOut",
+          scale: true,
+          fade: true,
+          onComplete: function () { gsap.set(details, { overflow: "auto" }) }
+        }).to(details, { yPercent: 0 }, 0.2);
+        drag[0].disable()
       }
-    })
+    }
+
+    window.onclick = openCard
+    window.ontouchend = openCard
   }
 
-  openCard(details: any, drag: any, data: any) {
-    const self: any = this;
-    this.selectedData = data;
-    document.addEventListener('click', closeCard);
-    Flip.fit(details, this.selectedElem, { scale: true });
-    const state = Flip.getState(details);
-    gsap.set(details, { clearProps: true });
-    gsap.set(details, { xPercent: 0, yPercent: 0, visibility: "visible", overflow: "hidden" });
-    gsap.to(details, { opacity: 1 })
-    Flip.from(state, {
-      duration: 0.5,
-      ease: "power2.inOut",
-      scale: true,
-      onComplete: function () { gsap.set(details, { overflow: "auto" }) }
-    }).to(details, { yPercent: 0 }, 0.2);
-    drag[0].disable()
+  addValues(data: any) {
+    const title: any = document.querySelector('.content h3.title span')
+    const duration: any = document.querySelector('.content p.duration var')
+    const description: any = document.querySelector('.content ul.description')
+    const responsibility: any = document.querySelector('.content ul.responsibility')
+    const technologies: any = document.querySelector('.content div.technologies')
 
-    function closeCard() {
-      document.removeEventListener('click', closeCard);
+    title.innerHTML = data.title
+    duration.innerHTML = data.duration
 
-      gsap.set(details, { overflow: "hidden" });
-      const state = Flip.getState(details);
-      Flip.fit(details, self.selectedElem, { scale: true });
-      const tl = gsap.timeline();
-      tl.set(details, { overflow: "hidden" });
-      Flip.from(state, {
-        scale: true,
-        duration: 0.5,
-        delay: 0.2,
-        onInterrupt: function () { tl.kill() }
-      })
-        .to(details, { opacity: 0 })
-        .to(details, { visibility: "hidden" });
-      drag[0].enable();
-      self.selectedElem = null;
-      self.selectedData = null;
-    }
+    const descriptionData = data.description?.map((val: any) => `<li>${val}</li>`).join('')
+    description.innerHTML = descriptionData
+
+    const responsibilityData = data.responsibility?.map((val: any) => `<li>${val}</li>`).join('') || ''
+    responsibility.innerHTML = responsibilityData
+
+    const technologiesData = data.tech?.map((val: any) => `<div class="tech d-flex flex-column justify-content-center align-items-center p-3"><img class="w-50" src="${val.icon}"/><label class="fw-medium text-center">${val.title}</label></div>`).join('')
+    technologies.innerHTML = technologiesData
   }
 
   createImageGrid() {
