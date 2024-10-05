@@ -1,19 +1,32 @@
 <div id="grid-container"></div>
 
 <div class="detail" data-flip-id=".detail">
-    <div class="content px-3 shadow">
-        <h3 class="title d-flex">
-            <span class="flex-fill"></span>
-            <i id="external-link" class="fa fa-external-link-square text-primary fs-4 mx-2 d-none"></i>
-            <span id="external-link-text" class="text-primary mx-2 d-none"></span>
-            <i id="closeBtn" class="fa fa-close text-body-secondary fs-4 mx-2"></i>
-        </h3>
-        <p class="duration"><var></var></p>
-        <label class="fw-medium">Description</label>
-        <ul class="description"></ul>
-        <label class="fw-medium">Responsibility</label>
-        <ul class="responsibility"></ul>
-        <label class="fw-medium">Technologies</label>
-        <div class="technologies d-flex justify-content-around flex-wrap"></div>
+    <div class="content shadow">
+        <div class="content-body px-3 h-100 overflow-y-auto">
+            <h3 class="title d-flex">
+                <span class="flex-fill"></span>
+                <i id="external-link" class="fa fa-external-link-square text-primary fs-4 mx-2 d-none"></i>
+                <span id="external-link-text" class="text-primary mx-2 d-none"></span>
+                <i id="closeBtn" class="fa fa-close text-body-secondary fs-4 mx-2"></i>
+            </h3>
+            <p class="duration"><var></var></p>
+            <label class="fw-medium">Description</label>
+            <ul class="description"></ul>
+            <label class="fw-medium">Responsibility</label>
+            <ul class="responsibility"></ul>
+            <label class="fw-medium">Technologies</label>
+            <div class="technologies d-flex justify-content-around flex-wrap"></div>
+        </div>
+    </div>
+</div>
+
+<div class="joystick shadow" (mouseenter)="cursor.enableOpenCursor(false);">
+    <div class="inner fs-4 text-black">
+        <div class="top-arrow arrow"><i (click)="changeCenter('up')" class="fa fa-angle-up"></i></div>
+        <div class="middle-arrows">
+            <div class="left-arrow arrow"><i  (click)="changeCenter('left')" class="fa fa-angle-left"></i></div>
+            <div class="right-arrow arrow"><i (click)="changeCenter('right')" class="fa fa-angle-right"></i></div>
+        </div>
+        <div class="bottom-arrow arrow"><i (click)="changeCenter('down')" class="fa fa-angle-down"></i></div>
     </div>
 </div>

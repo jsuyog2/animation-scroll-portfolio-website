@@ -52,7 +52,7 @@ export class InfiniteGridComponent {
 
   @Input('useInertia') useInertia = false;
   @Input('useCenterGrid') useCenterGrid = true;
-  constructor(private cursor: CursorService) { }
+  constructor(public cursor: CursorService) { }
   ngOnInit() {
     this.contentNum = this.data.length;
     this.tags = [...new Set(this.data.map((val: any) => {
@@ -92,8 +92,7 @@ export class InfiniteGridComponent {
 
     window.addEventListener("resize", () => { this.resize() });
     this.initializeCardClickEvent(drag)
-    const gridContainer: any = document.querySelector('.mask')
-    gridContainer.addEventListener('mousemove', (e: any) => {
+    document.addEventListener('mousemove', (e: any) => {
       var x = e.pageX;
       var y = e.pageY;
       let elems = document.elementsFromPoint(x, y);
@@ -356,7 +355,6 @@ export class InfiniteGridComponent {
     }
     let drag = Draggable.create(`#${this.containerId}`, options);
     drag[0].addEventListener('dragstart', () => {
-      console.log("start");
       this.enableOpenCard = false
     })
     drag[0].addEventListener('dragend', () => {
@@ -368,9 +366,41 @@ export class InfiniteGridComponent {
     return drag;
   }
 
+  changeCenter(direction: any) {
+    let bcr = this.lastCenteredElem.getBoundingClientRect();
+    console.log(bcr);
+
+    let options: any = {
+      ease: "sine.inOut",
+      duration: 0.7,
+      onComplete: () => {
+        this.updateCenterElem();
+        this.centerGrid()
+      }
+    }
+
+    switch (direction) {
+      case 'up':
+        options.x = "+=" + (bcr.width / 2)
+        options.y = "+=" + bcr.height
+        break;
+      case 'down':
+        options.x = "+=" + (bcr.width / 2)
+        options.y = "-=" + bcr.height
+        break;
+      case 'left':
+        options.x = "+=" + bcr.width
+        break;
+      case 'right':
+        options.x = "-=" + bcr.width
+        break;
+    }
+    gsap.to(`#${this.containerId}`, options);
+
+
+  }
+
   updateCenterElem() {
-
-
     let elems = document.elementsFromPoint(this.winMidX, this.winMidY);
     elems.forEach(elem => {
 
