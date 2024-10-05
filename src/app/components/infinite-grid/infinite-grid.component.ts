@@ -48,6 +48,8 @@ export class InfiniteGridComponent {
 
   selectedElem: any = null;
 
+  enableOpenCard: boolean = true;
+
   @Input('useInertia') useInertia = false;
   @Input('useCenterGrid') useCenterGrid = true;
   constructor(private cursor: CursorService) { }
@@ -87,20 +89,17 @@ export class InfiniteGridComponent {
     this.setStyles();
 
     this.resize();
+
     window.addEventListener("resize", () => { this.resize() });
     this.initializeCardClickEvent(drag)
-
-    window.addEventListener('mousemove', (e) => {
+    const gridContainer: any = document.querySelector('.mask')
+    gridContainer.addEventListener('mousemove', (e: any) => {
       var x = e.pageX;
       var y = e.pageY;
       let elems = document.elementsFromPoint(x, y);
       const elem = elems.filter((val) => val.matches(`.${this.divClass}`));
-      if (elems[0].matches(`div.mask`)) {
-        if (elem.length !== 0) {
-          this.cursor.enableOpenCursor(true);
-        } else {
-          this.cursor.enableOpenCursor(false);
-        }
+      if (elem.length !== 0) {
+        this.cursor.enableOpenCursor(true);
       } else {
         this.cursor.enableOpenCursor(false);
       }
@@ -154,6 +153,9 @@ export class InfiniteGridComponent {
     }
 
     const openCard = (e: any) => {
+      if (!this.enableOpenCard) {
+        return
+      }
       if (e.cancelable) {
         e.preventDefault();
       }
@@ -207,6 +209,7 @@ export class InfiniteGridComponent {
           onComplete: function () { gsap.set(details, { overflow: "auto" }) }
         }).to(details, { yPercent: 0 }, 0.2);
         drag[0].disable()
+        this.cursor.enableOpenCursor(false);
       }
     }
     const backdrop: any = document.querySelector('.detail');
@@ -217,8 +220,17 @@ export class InfiniteGridComponent {
         closeCard(e, true)
       }
     }
-    window.onclick = openCard
-    window.ontouchend = openCard
+    backdrop.ontouchend = (e: any) => {
+      if (e.target.className === 'detail') {
+        closeCard(e, true)
+      }
+    }
+    const gridContainer: any = document.querySelector('.mask')
+    gridContainer.onclick = openCard
+    gridContainer.ontouchend = openCard
+
+    const closeBtn: any = document.getElementById('closeBtn')
+    closeBtn.onclick = closeCard
   }
 
   addValues(data: any) {
@@ -342,8 +354,18 @@ export class InfiniteGridComponent {
     } else if (this.useCenterGrid) { // No inertia
       options.onDragEnd = () => { this.centerGrid(); }
     }
+    let drag = Draggable.create(`#${this.containerId}`, options);
+    drag[0].addEventListener('dragstart', () => {
+      console.log("start");
+      this.enableOpenCard = false
+    })
+    drag[0].addEventListener('dragend', () => {
+      setTimeout(() => {
+        this.enableOpenCard = true
+      }, 1);
 
-    return Draggable.create(`#${this.containerId}`, options);
+    })
+    return drag;
   }
 
   updateCenterElem() {
@@ -555,8 +577,8 @@ export class InfiniteGridComponent {
       '^(https?:\\/\\/)?' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
       '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+@]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]@*)?' + // query string
       '(\\#[-a-z\\d_]*)?$',
       'i'
     ); // fragment locator
