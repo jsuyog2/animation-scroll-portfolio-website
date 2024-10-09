@@ -1,0 +1,44 @@
+$bg-color: #090c0e;
+
+.loading {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: flex;
+
+
+    >div {
+
+        height: 100%;
+        font-size: 5rem;
+
+        &.top {
+            width: 100%;
+            background-color: white;
+            text-align: center;
+
+            position: absolute;
+            align-content: center;
+
+            &.scrollingText {
+                -webkit-text-stroke-color: $bg-color;
+            }
+        }
+
+        &.bottom {
+            width: 0%;
+            background-color: $bg-color;
+            text-align: center;
+            overflow: hidden;
+            z-index: 9;
+            text-overflow: clip;
+            position: absolute;
+            align-content: center;
+
+            .text {
+                width: 100vw;
+            }
+        }
+    }
+}

@@ -3,6 +3,7 @@ import { rainbowCursor } from 'cursor-effects';
 import gsap from 'gsap';
 import { Draggable, Flip } from 'gsap/all';
 import { CursorService } from '../../services/cursor.service';
+import { LoadingService } from '../../services/loading.service';
 @Component({
   selector: 'app-infinite-grid',
   standalone: true,
@@ -49,10 +50,12 @@ export class InfiniteGridComponent {
   selectedElem: any = null;
 
   enableOpenCard: boolean = true;
+  loadingSub: any;
 
   @Input('useInertia') useInertia = false;
   @Input('useCenterGrid') useCenterGrid = true;
-  constructor(public cursor: CursorService) { }
+
+  constructor(public cursor: CursorService, private loadingService: LoadingService) { }
   ngOnInit() {
     this.contentNum = this.data.length;
     this.tags = [...new Set(this.data.map((val: any) => {
@@ -63,18 +66,28 @@ export class InfiniteGridComponent {
   }
   ngAfterViewInit() {
     gsap.registerPlugin(Draggable, Flip);
-    setTimeout(() => {
+
+    this.loadingSub = this.loadingService.onLoadingComplete().subscribe(() => {
       this.intialGrid();
-    }, 1);
 
-    const elem: any = document.querySelector('.detail');
-    rainbowCursor({
-      element: elem,
-      length: 10,
-      colors: [this.color],
-      size: 5,
-    });
+      gsap.set(`.${this.divClass}`, { scale: 0 })
+      gsap.to(`.${this.divClass}`, {
+        duration: 2, ease: "power2.inOut", scale: 1, onComplete: () => {
+          gsap.set(`.${this.divClass}`, { delay: 2, scale: 1, overwrite: true })
+        }
+      })
+      const elem: any = document.querySelector('.detail');
+      rainbowCursor({
+        element: elem,
+        length: 10,
+        colors: [this.color],
+        size: 5,
+      });
+    })
+  }
 
+  ngOnDestroy() {
+    this.loadingSub.unsubscribe();
   }
 
   intialGrid() {
@@ -368,7 +381,6 @@ export class InfiniteGridComponent {
 
   changeCenter(direction: any) {
     let bcr = this.lastCenteredElem.getBoundingClientRect();
-    console.log(bcr);
 
     let options: any = {
       ease: "sine.inOut",

@@ -3,6 +3,9 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import data from './../../../../public/data.json';
 import { CardModule } from 'primeng/card';
 import { InfiniteGridComponent } from "../../components/infinite-grid/infinite-grid.component";
+import { ScrollToPlugin } from 'gsap/all';
+import gsap from 'gsap';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-experience',
@@ -14,8 +17,10 @@ import { InfiniteGridComponent } from "../../components/infinite-grid/infinite-g
 })
 export class ExperienceComponent {
   data: any = data.projects;
-
+  constructor(private loadingService: LoadingService) { }
   ngOnInit() {
+    this.loadingService.toggleLoading('Experience');
+    gsap.registerPlugin(ScrollToPlugin)
     this.data = this.data.map((val: any, index: any) => {
       val.id = index
       if (val.start_date) {
@@ -24,7 +29,13 @@ export class ExperienceComponent {
       }
       return val
     })
-    
+
+  }
+
+  ngAfterViewInit() {
+    gsap.to(window, {
+      duration: 1, scrollTo: 0
+    });
   }
 
   returnDuration(start_date: any, end_date: any) {

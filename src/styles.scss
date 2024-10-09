@@ -73,7 +73,6 @@ nav {
     background-size: 400% 400%;
     background-attachment: fixed;
     border-radius: 50%;
-    z-index: 99999;
     position: relative;
 
     .profile-pic {
@@ -95,22 +94,23 @@ nav {
 .scrollingText {
     margin: 0;
     color: transparent;
-    font-size: 15vw;
+    font-size: 6vw;
     font-weight: 900;
     font-family: "Raleway";
     -webkit-text-stroke-width: 1.5px;
     -webkit-text-stroke-color: rgb(255, 255, 255);
+    position: relative;
 
     &.black-color {
         -webkit-text-stroke-color: rgb(0, 0, 0);
     }
 
     @include tablet-and-up {
-        font-size: 6rem;
+        font-size: 5rem;
     }
 
     @include desktop-and-up {
-        font-size: 6rem;
+        font-size: 5rem;
     }
 
     &.animate {
@@ -196,8 +196,6 @@ nav {
     cursor: pointer;
     font-size: larger;
     min-width: 60px;
-    opacity: 0;
-    transform: translateX(-100px) translateY(-100px);
     height: 30px;
 
     &.btn-value {
@@ -274,8 +272,6 @@ nav {
 
 .banner-section {
     .first-col {
-        transform: translateX(0);
-
         .banner-title {
             transform: scale(1);
 
@@ -309,16 +305,23 @@ nav {
         }
     }
 
+    .mid-col {
+        z-index: 0;
+    }
+
 
     .banner-bottom-text {
         font-size: 1.3rem;
+        position: absolute;
+        width: 100%;
+        left: 0;
 
         @include tablet-and-up {
             font-size: 0.9rem;
         }
 
         @include desktop-and-up {
-            font-size: 1.9rem;
+            font-size: 1.8rem;
         }
     }
 }
@@ -327,11 +330,14 @@ nav {
 
 
 .about-section {
+    .about-section-header .scrollingText {
+        font-size: 12vw;
+    }
 
     .about-section-text {
         .about-text {
-            opacity: 0;
             color: white;
+
         }
     }
 
@@ -340,8 +346,6 @@ nav {
         overflow: hidden;
 
         .counts-value {
-            opacity: 0;
-
             .fa-solid {
                 font-size: 2.5rem;
                 transition: all .3s ease-in-out;
@@ -367,43 +371,23 @@ nav {
 }
 
 .expertise-section {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-wrap: nowrap;
 
-    .panel {
-        width: 100%;
-        height: 100vh;
-        align-items: center;
-        display: inline-flex;
-        justify-items: center;
+    p {
+        font-size: large;
 
-
-        p {
-            font-size: x-large;
-
-            i {
-                font-size: 8rem;
-
-                @include tablet-and-up {
-                    font-size: 10rem;
-                }
-
-                @include desktop-and-up {
-                    font-size: 6rem;
-                }
-            }
+        i {
+            font-size: 8rem;
 
             @include tablet-and-up {
-                font-size: xx-large;
+                font-size: 10rem;
             }
 
             @include desktop-and-up {
-                font-size: xx-large;
+                font-size: 6rem;
             }
         }
     }
+
 }
 
 .skills-section {
@@ -420,13 +404,24 @@ nav {
             transform: translateX(-250px);
         }
     }
+
+}
+
+.expertise-section-end-header {
+
+    .scrollingText span {
+        transition: all 0.35s;
+
+        &:hover {
+            color: #ffffff;
+            cursor: none;
+        }
+    }
 }
 
 .contact-section {
 
     .header-title {
-        opacity: 0;
-        transform: scale(0);
         margin: 0;
     }
 
@@ -443,7 +438,6 @@ nav {
         }
 
         &:hover {
-
             color: #ffffff;
             cursor: none;
         }
@@ -451,11 +445,9 @@ nav {
 }
 
 .footer {
-    transform: scale(0);
-    position: absolute;
     width: 100%;
-    bottom: 0;
-    left: 0;
+    position: relative;
+    overflow: hidden;
 }
 
 @keyframes gradient {
