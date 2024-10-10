@@ -142,6 +142,11 @@ export class InfiniteGridComponent {
       }
 
       gsap.set(details, { overflow: "hidden" });
+      gsap.to('.joystick', {
+        opacity: 1,
+        duration: 0.5,
+        ease: "power2.inOut",
+      })
       const state = Flip.getState(details);
       Flip.fit(details, selectedElem, { scale: true, fade: true });
       const tl = gsap.timeline();
@@ -211,6 +216,11 @@ export class InfiniteGridComponent {
         gsap.set(details, { clearProps: true });
         gsap.set('.detail', { visibility: 'visible' })
         gsap.to('.detail', { opacity: 1 })
+        gsap.to('.joystick', {
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.inOut",
+        })
         gsap.set(details, { xPercent: 0, yPercent: 0, visibility: "visible", overflow: "hidden" });
         gsap.to(details, { opacity: 1 })
         Flip.from(state, {

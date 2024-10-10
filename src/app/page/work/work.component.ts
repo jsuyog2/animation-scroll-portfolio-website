@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewEncapsulation } from '@angular/core';
-import data from './../../../../public/data.json';
+import data from '../../../../public/data.json';
 import { CardModule } from 'primeng/card';
 import { InfiniteGridComponent } from "../../components/infinite-grid/infinite-grid.component";
 import { ScrollToPlugin } from 'gsap/all';
@@ -11,15 +11,15 @@ import { LoadingService } from '../../services/loading.service';
   selector: 'app-experience',
   standalone: true,
   imports: [CardModule, CommonModule, InfiniteGridComponent],
-  templateUrl: './experience.component.html',
-  styleUrl: './experience.component.scss',
+  templateUrl: './work.component.html',
+  styleUrl: './work.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class ExperienceComponent {
+export class WorkComponent {
   data: any = data.projects;
   constructor(private loadingService: LoadingService) { }
   ngOnInit() {
-    this.loadingService.toggleLoading('Experience');
+    this.loadingService.toggleLoading('Work');
     gsap.registerPlugin(ScrollToPlugin)
     this.data = this.data.map((val: any, index: any) => {
       val.id = index
