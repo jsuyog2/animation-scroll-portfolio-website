@@ -93,12 +93,13 @@ nav {
 
 .scrollingText {
     margin: 0;
-    color: transparent;
+    color: $bg-color;
     font-size: 6vw;
     font-weight: 900;
     font-family: "Raleway";
-    -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: rgb(255, 255, 255);
+    // -webkit-text-stroke-width: 1.5px;
+    // -webkit-text-stroke-color: rgb(255, 255, 255);
+    text-shadow: -1px -1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff, 1px 1px 0 #fff;
     position: relative;
 
     &.black-color {
