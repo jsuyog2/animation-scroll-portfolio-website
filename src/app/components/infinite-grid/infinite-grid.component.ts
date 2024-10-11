@@ -1,5 +1,4 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { rainbowCursor } from 'cursor-effects';
 import gsap from 'gsap';
 import { Draggable, Flip } from 'gsap/all';
 import { CursorService } from '../../services/cursor.service';
@@ -56,6 +55,7 @@ export class InfiniteGridComponent {
   @Input('useCenterGrid') useCenterGrid = true;
 
   constructor(public cursor: CursorService, private loadingService: LoadingService) { }
+
   ngOnInit() {
     this.contentNum = this.data.length;
     this.tags = [...new Set(this.data.map((val: any) => {
@@ -65,29 +65,17 @@ export class InfiniteGridComponent {
     this.rowNum = this.tags.length;
   }
   ngAfterViewInit() {
-    gsap.registerPlugin(Draggable, Flip);
-
-    this.loadingSub = this.loadingService.onLoadingComplete().subscribe(() => {
-      this.intialGrid();
-
-      gsap.set(`.${this.divClass}`, { scale: 0 })
-      gsap.to(`.${this.divClass}`, {
-        duration: 2, ease: "power2.inOut", scale: 1, onComplete: () => {
-          gsap.set(`.${this.divClass}`, { delay: 2, scale: 1, overwrite: true })
-        }
+    let load = this.loadingService.onInitalLoad()
+    if (load.closed) {
+      setTimeout(() => {
+        this.intialGrid();
+      }, 1);
+    } else {
+      load.subscribe(() => {
+        this.loadingService.destroyOnInitalLoad();
+        this.intialGrid();
       })
-      const elem: any = document.querySelector('.detail');
-      rainbowCursor({
-        element: elem,
-        length: 10,
-        colors: [this.color],
-        size: 5,
-      });
-    })
-  }
-
-  ngOnDestroy() {
-    this.loadingSub.unsubscribe();
+    }
   }
 
   intialGrid() {
@@ -116,11 +104,18 @@ export class InfiniteGridComponent {
         this.cursor.enableOpenCursor(false);
       }
     })
+
+    gsap.set(`.${this.divClass}`, { scale: 0 })
+    gsap.to(`.${this.divClass}`, {
+      duration: 2, ease: "power2.inOut", scale: 1, onComplete: () => {
+        gsap.set(`.${this.divClass}`, { delay: 2, scale: 1, overwrite: true })
+      }
+    })
   }
 
   initializeCardClickEvent(drag: any) {
     var selectedElem: any;
-    const details: any = document.querySelector('.content');
+    const details: any = document.querySelector('.detail-body');
 
 
 
@@ -256,13 +251,13 @@ export class InfiniteGridComponent {
   }
 
   addValues(data: any) {
-    const title: any = document.querySelector('.content h3.title span')
-    const link: any = document.querySelector('.content h3.title #external-link')
-    const linkText: any = document.querySelector('.content h3.title #external-link-text')
-    const duration: any = document.querySelector('.content p.duration var')
-    const description: any = document.querySelector('.content ul.description')
-    const responsibility: any = document.querySelector('.content ul.responsibility')
-    const technologies: any = document.querySelector('.content div.technologies')
+    const title: any = document.querySelector('.content-body h3.title span')
+    const link: any = document.querySelector('.content-body h3.title #external-link')
+    const linkText: any = document.querySelector('.content-body h3.title #external-link-text')
+    const duration: any = document.querySelector('.content-body p.duration var')
+    const description: any = document.querySelector('.content-body ul.description')
+    const responsibility: any = document.querySelector('.content-body ul.responsibility')
+    const technologies: any = document.querySelector('.content-body div.technologies')
 
 
     title.innerHTML = data.title
@@ -351,7 +346,7 @@ export class InfiniteGridComponent {
       left: 0,
       width: "100vw",
       height: "100vh",
-      zIndex: 9999,
+      zIndex: 99999,
     });
   }
 

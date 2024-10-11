@@ -30,10 +30,10 @@
     align-items: center;
     background-color: #00000059;
     opacity: 0;
-    z-index: 10000;
+    z-index: 100000;
     cursor: auto;
 
-    .content {
+    .content-body {
         width: 80vw;
         height: 80vh;
         background-color: white;
@@ -53,7 +53,7 @@
     position: absolute;
     bottom: 60px;
     left: 25px;
-    z-index: 10001;
+    z-index: 100002;
     border-radius: 50%;
     backdrop-filter: blur(4px);
 

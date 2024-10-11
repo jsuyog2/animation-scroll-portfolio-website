@@ -20,21 +20,35 @@ export class LoadingComponent {
   ngAfterViewInit() {
     this.initalLoading()
     this.triggerLoading();
-    this.loadingService.onToggleLoading().subscribe((title: any) => {
+    let loading = this.loadingService.onToggleLoading().subscribe((title: any) => {
       this.triggerLoading(title);
     })
   }
 
   initalLoading() {
+    let initalLoad = true
     this.loadingTl.set('html,body', { overflow: 'hidden' })
     this.loadingTl.set('.loading', { opacity: 1, scale: 1 })
     this.loadingTl.set('.bottom', { width: 0 })
+
+    this.loadingTl.from('.loading', {
+      opacity: 0,
+      scale: 200,
+      display: 'none',
+      ease: "power4.inOut",
+      duration: 0.5
+    })
 
     this.loadingTl.to('.bottom', {
       width: '100%',
       duration: 3,
       ease: "power3.inOut",
       onComplete: () => {
+        if (initalLoad) {
+          this.loadingService.onInitalLoadComplete();
+          initalLoad = false;
+        }
+
         this.loadingService.triggerLoadingComplete();
       }
     });
@@ -51,8 +65,13 @@ export class LoadingComponent {
   }
 
   public triggerLoading(title: any = 'Loading') {
-    this.input = title
-    gsap.to(window, { duration: 1, scrollTo: 0 });
-    this.loadingTl.restart()
+    this.input = title;
+    gsap.set('.text', { text: title })
+    gsap.set('.top', { text: title })
+    setTimeout(() => {
+      gsap.to(window, { duration: 1, scrollTo: 0 });
+      this.loadingTl.restart()
+    }, 1);
+
   }
 }

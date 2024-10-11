@@ -3,7 +3,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import data from '../../../../public/data.json';
 import { CardModule } from 'primeng/card';
 import { InfiniteGridComponent } from "../../components/infinite-grid/infinite-grid.component";
-import { ScrollToPlugin } from 'gsap/all';
 import gsap from 'gsap';
 import { LoadingService } from '../../services/loading.service';
 
@@ -19,8 +18,6 @@ export class WorkComponent {
   data: any = data.projects;
   constructor(private loadingService: LoadingService) { }
   ngOnInit() {
-    this.loadingService.toggleLoading('Work');
-    gsap.registerPlugin(ScrollToPlugin)
     this.data = this.data.map((val: any, index: any) => {
       val.id = index
       if (val.start_date) {
@@ -37,7 +34,9 @@ export class WorkComponent {
       duration: 1, scrollTo: 0
     });
   }
-
+  canDeactivate(value: any) {
+    return this.loadingService.navigatePage(value.url);
+  }
   returnDuration(start_date: any, end_date: any) {
     let start = this.returnDateFormat(start_date);
     let end = end_date ? this.returnDateFormat(end_date) : 'Present';

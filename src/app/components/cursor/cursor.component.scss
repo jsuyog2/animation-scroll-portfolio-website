@@ -12,6 +12,7 @@ html {
   position: absolute;
   pointer-events: none;
   z-index: 1000;
+  display: none;
 }
 
 .copy-cursor {
@@ -21,17 +22,18 @@ html {
   position: absolute;
   border: 1px solid #fff;
   pointer-events: none;
-  z-index: 1000;
+  z-index: 100000;
   transform: translate(-50px, -50px);
   backdrop-filter: blur(4px);
   opacity: 0;
-  display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.2rem;
   color: #fff;
   font-weight: 700;
   text-shadow: 0px 0px 5px #000;
+  visibility: hidden;
+  display: none;
 
   span {
     transform: scale(1);
@@ -45,17 +47,18 @@ html {
   position: absolute;
   border: 1px solid #fff;
   pointer-events: none;
-  z-index: 1000;
+  z-index: 100000;
   transform: translate(-50px, -50px);
   backdrop-filter: blur(4px);
   opacity: 0;
-  display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.2rem;
   color: #fff;
   font-weight: 700;
   text-shadow: 0px 0px 5px #000;
+  visibility: hidden;
+  display: none;
 
   span {
     transform: scale(1);
@@ -80,9 +83,11 @@ html {
 .expand {
   animation: cursorAnim3 .5s forwards;
   border: 1px solid $color;
+  display: block !important;
 }
 
 .hidden {
   opacity: 1;
   visibility: visible !important;
+  display: flex !important;
 }

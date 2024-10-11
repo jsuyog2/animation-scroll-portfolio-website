@@ -39,6 +39,10 @@ html {
     overflow-x: hidden;
 }
 
+canvas {
+    z-index: 1000000;
+}
+
 nav {
     position: relative;
     overflow: hidden;
@@ -81,7 +85,8 @@ nav {
         height: 100%;
         filter: drop-shadow(0 0 25px #0000007a);
         transform: translateY(15px) scale(1);
-
+        z-index: -1;
+        position: sticky;
     }
 
 
@@ -307,7 +312,7 @@ nav {
     }
 
     .mid-col {
-        z-index: 0;
+        z-index: 2;
     }
 
 

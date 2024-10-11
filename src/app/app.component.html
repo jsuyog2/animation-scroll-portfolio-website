@@ -1,14 +1,21 @@
-<app-loading></app-loading>
 <app-cursor [enable-copy-cursor]="enableCopyCursor" [enable-open-cursor]="enableOpenCursor"></app-cursor>
+<app-loading></app-loading>
 <div class="container-fluid min-vh-100">
   <nav>
     <ul>
       <li routerLink="/"><button class="btn btn-value background-black" data-hover='Home'>Home</button></li>
-      <li routerLink="/work"><button class="btn btn-value background-black"
-          data-hover='Work'>Work</button></li>
-      <li routerLink="/contact"><button class="btn btn-value background-black" data-hover='Contact'>Contact</button>
+      <li routerLink="/work"><button class="btn btn-value background-black" data-hover='Work'>Work</button></li>
+      <li routerLink="/about"><button class="btn btn-value background-black" data-hover='About'>About</button>
       </li>
     </ul>
   </nav>
   <router-outlet></router-outlet>
 </div>
+
+<!-- <li (click)="navigatePage('/')"><button class="btn btn-value background-black" data-hover='Home'>Home</button>
+</li>
+<li (click)="navigatePage('/work')"><button class="btn btn-value background-black" data-hover='Work'>Work</button>
+</li>
+<li (click)="navigatePage('/about')"><button class="btn btn-value background-black"
+    data-hover='About'>About</button>
+</li> -->

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import gsap from 'gsap';
 import { MenuItem } from 'primeng/api';
 import data from './../../../../public/data.json';
-import { Observer, ScrollTrigger, TextPlugin } from 'gsap/all';
 import { CursorComponent } from "../../components/cursor/cursor.component";
 import { ClipboardModule } from 'ngx-clipboard';
 import { MenubarModule } from 'primeng/menubar';
@@ -46,34 +45,34 @@ export class HomeComponent {
   mm: any;
 
   loadingSub: any;
-  constructor(public cursor: CursorService, private loadingService: LoadingService) { }
+  constructor(public cursor: CursorService, public loadingService: LoadingService) { }
   ngOnInit() {
     this.addService();
-    gsap.registerPlugin(Observer, TextPlugin, ScrollTrigger)
-    this.mm = gsap.matchMedia();
-    this.loadingService.toggleLoading('Home');
-  }
-
-  toggleCursorEvent() {
-    this.enableCursor = !this.enableCursor
-    this.cursor.enableCopyCursor(this.enableCursor);
   }
 
   initalLoad() {
+    this.mm = gsap.matchMedia();
     this.sectionMain();
     this.sectionAbout();
     this.sectionExpertise();
     this.sectionContact();
   }
-
-  ngOnDestroy() {
-    this.loadingSub.unsubscribe();
-  }
-
   ngAfterViewInit() {
-    this.loadingSub = this.loadingService.onLoadingComplete().subscribe(() => {
-      this.initalLoad()
-    })
+    let load = this.loadingService.onInitalLoad()
+    if (load.closed) {
+      setTimeout(() => {
+        this.initalLoad();
+      }, 1);
+    } else {
+      load.subscribe(() => {
+        this.loadingService.destroyOnInitalLoad();
+        this.initalLoad();
+
+      })
+    }
+  }
+  canDeactivate(value: any) {
+    return this.loadingService.navigatePage(value.url);
   }
   sectionMain() {
     gsap.set(".first-col", { translateX: -100 })
@@ -128,8 +127,8 @@ export class HomeComponent {
     })
 
     gsap.to("#title-name", {
-      delay: 1,
-      duration: 2,
+      delay: 3,
+      duration: 5,
       text: { value: "Suyog Jadhav" }
     })
     const subheaderTimeline = gsap.timeline({ repeat: -1, yoyo: true });
@@ -147,6 +146,19 @@ export class HomeComponent {
     let section = `.about-section`
     let aboutSectionRow = gsap.utils.toArray(".about-section-row")
 
+
+    gsap.to(`${section} .scrollingText.animate span`, {
+      duration: 1,
+      opacity: 1,
+      text: { value: `about` },
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 75%',
+        end: "top center",
+        scrub: true
+      }
+    })
+
     aboutSectionRow.forEach((elem: any) => {
       gsap.set(elem, {
         translateX: '50vw',
@@ -158,23 +170,11 @@ export class HomeComponent {
         translateX: 0,
         scrollTrigger: {
           trigger: section,
-          start: 'top center',
-          end: "+=350",
+          start: 'top 75%',
+          end: "top center",
           scrub: true
         }
       })
-    })
-
-    gsap.to(`${section} .scrollingText.animate span`, {
-      duration: 1,
-      opacity: 1,
-      text: { value: `about` },
-      scrollTrigger: {
-        trigger: section,
-        start: 'top center',
-        end: "+=350",
-        scrub: true
-      }
     })
 
 
@@ -190,8 +190,8 @@ export class HomeComponent {
         translateX: 0,
         scrollTrigger: {
           trigger: elem,
-          start: 'top 80%',
-          end: "bottom 70%",
+          start: 'top 75%',
+          end: "top center",
           scrub: true
         }
       })
@@ -216,8 +216,20 @@ export class HomeComponent {
       translateX: 0,
       scrollTrigger: {
         trigger: section,
-        start: 'top center',
-        end: "+=350",
+        start: 'top 75%',
+        end: "top center",
+        scrub: true
+      }
+    })
+
+    gsap.to(`${section} .scrollingText.animate span`, {
+      duration: 1,
+      opacity: 1,
+      text: { value: `Discover my creative expertise` },
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 75%',
+        end: "top center",
         scrub: true
       }
     })
@@ -234,24 +246,13 @@ export class HomeComponent {
         translateX: 0,
         scrollTrigger: {
           trigger: elem,
-          start: 'top 80%',
-          end: "bottom 70%",
+          start: 'top 75%',
+          end: "top center",
           scrub: true
         }
       })
     })
 
-    gsap.to(`${section} .scrollingText.animate span`, {
-      duration: 1,
-      opacity: 1,
-      text: { value: `Discover my creative expertise` },
-      scrollTrigger: {
-        trigger: section,
-        start: 'top center',
-        end: "+=350",
-        scrub: true
-      }
-    })
 
     gsap.set(`${endSection}`, {
       translateX: '50vw',
@@ -282,9 +283,9 @@ export class HomeComponent {
       translateX: 0,
       scrollTrigger: {
         trigger: section,
-        start: 'top center',
+        start: 'top 90%',
         end: 'bottom 90%',
-        scrub: true,
+        scrub: true
       }
     })
 
@@ -298,7 +299,7 @@ export class HomeComponent {
       translateX: 0,
       scrollTrigger: {
         trigger: section,
-        start: 'top center',
+        start: 'top 90%',
         end: 'bottom 90%',
         scrub: true
       }
@@ -310,7 +311,7 @@ export class HomeComponent {
       text: { value: this.data.contact.value },
       scrollTrigger: {
         trigger: section,
-        start: 'top center',
+        start: 'top 90%',
         end: 'bottom 90%',
         scrub: true,
       }
@@ -328,7 +329,7 @@ export class HomeComponent {
         translateX: 0,
         scrollTrigger: {
           trigger: section,
-          start: 'top center',
+          start: 'top 90%',
           end: 'bottom 90%',
           scrub: true
         }
@@ -346,7 +347,7 @@ export class HomeComponent {
       scrollTrigger: {
         trigger: ".footer",
         start: 'top 90%',
-        end: 'bottom bottom',
+        end: 'bottom 100%+10',
         scrub: true
       }
     });
@@ -421,7 +422,9 @@ export class HomeComponent {
         ease: "none"
       });
   }
-
-
+  toggleCursorEvent() {
+    this.enableCursor = !this.enableCursor
+    this.cursor.enableCopyCursor(this.enableCursor);
+  }
 
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { NavigationStart, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CursorComponent } from "./components/cursor/cursor.component";
 import gsap from 'gsap';
-import { ScrollTrigger, TextPlugin } from 'gsap/all';
+import { Draggable, Flip, ScrollTrigger, TextPlugin } from 'gsap/all';
 import Lenis from 'lenis';
 import { CursorService } from './services/cursor.service';
 import { LoadingComponent } from "./components/loading/loading.component";
@@ -20,10 +20,10 @@ export class AppComponent {
   enableCopyCursor = false;
   enableOpenCursor = false;
   loadingSub: any;
-  constructor(private cursor: CursorService, private loadingService: LoadingService) { }
+  constructor(private cursor: CursorService, private loadingService: LoadingService) {}
 
   ngOnInit() {
-    gsap.registerPlugin(TextPlugin, ScrollTrigger)
+    gsap.registerPlugin(TextPlugin, ScrollTrigger, Draggable, Flip)
 
     const lenis: any = new Lenis();
 
@@ -45,7 +45,7 @@ export class AppComponent {
   }
 
   ngAfterViewInit() {
-    this.loadingSub = this.loadingService.onLoadingComplete().subscribe(() => {
+    this.loadingSub = this.loadingService.onLoadingComplete().subscribe((data) => {
       this.sectionNav();
     })
 

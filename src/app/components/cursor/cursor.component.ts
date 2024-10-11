@@ -50,7 +50,7 @@ export class CursorComponent {
     rainbowCursor({
       length: 10,
       colors: [this.color],
-      size: 5,
+      size: 5
     });
   }
 
@@ -77,11 +77,11 @@ export class CursorComponent {
 
   @HostListener('document:mousemove', ['$event'])
   onMousemove($event: any) {
-    this.xCopySetter($event.pageX - 0)
-    this.yCopySetter($event.pageY - 0)
+    this.xCopySetter($event.pageX - 50)
+    this.yCopySetter($event.pageY - 50)
 
-    this.xOpenSetter($event.pageX - 0)
-    this.yOpenSetter($event.pageY - 0)
+    this.xOpenSetter($event.pageX - 50)
+    this.yOpenSetter($event.pageY - 50)
 
     this.top = ($event.pageY - 10) + "px";
     this.left = ($event.pageX - 10) + "px";
