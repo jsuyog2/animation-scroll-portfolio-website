@@ -190,8 +190,6 @@ export class InfiniteGridComponent {
         x = touch.pageX;
         y = touch.pageY;
       } else {
-        console.log(e);
-        
         x = e.pageX;
         y = e.pageY;
       }
