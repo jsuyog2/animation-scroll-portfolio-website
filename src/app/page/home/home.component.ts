@@ -397,8 +397,6 @@ export class HomeComponent {
   }
 
   socialOpen(value: string) {
-    console.log(value);
-
     switch (value) {
       case 'github':
         window.open(data.social.github, '_blank');
