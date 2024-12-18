@@ -6,6 +6,7 @@
 @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
 @import "lenis/dist/lenis.css";
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
 $color: #399dd2;
 $bg-color: #090c0e;
@@ -30,7 +31,7 @@ $bg-color: #090c0e;
 
 body,
 html {
-  font-family: "Raleway";
+  font-family: "Raleway", serif;
   height: 100%;
   width: 100%;
   margin: 0;
@@ -105,7 +106,7 @@ nav.header {
   color: $bg-color;
   font-size: 6vw;
   font-weight: 900;
-  font-family: "Raleway";
+  font-family: "Raleway", serif;
   // -webkit-text-stroke-width: 1.5px;
   // -webkit-text-stroke-color: rgb(255, 255, 255);
   text-shadow: -1px -1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff, 1px 1px 0 #fff;
@@ -200,7 +201,7 @@ nav.header {
   border: none;
   background-color: transparent;
   font-weight: 300;
-  font-family: "Raleway";
+  font-family: "Raleway", serif;
   cursor: pointer;
   font-size: larger;
   min-width: 60px;
