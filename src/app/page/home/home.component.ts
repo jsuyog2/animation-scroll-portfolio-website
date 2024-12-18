@@ -15,7 +15,6 @@ import { LoadingService } from '../../services/loading.service';
   selector: 'app-home',
   standalone: true,
   imports: [
-    CursorComponent,
     CommonModule,
     ButtonModule,
     CardModule,
@@ -398,6 +397,8 @@ export class HomeComponent {
   }
 
   socialOpen(value: string) {
+    console.log(value);
+
     switch (value) {
       case 'github':
         window.open(data.social.github, '_blank');

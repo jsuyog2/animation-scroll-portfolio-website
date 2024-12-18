@@ -13,13 +13,7 @@ import { CursorComponent } from '../../components/cursor/cursor.component';
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [
-    CursorComponent,
-    TimelineModule,
-    StepsModule,
-    CommonModule,
-    ClipboardModule,
-  ],
+  imports: [TimelineModule, StepsModule, CommonModule, ClipboardModule],
   providers: [],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss',
@@ -302,6 +296,8 @@ export class ContactComponent {
   }
 
   socialOpen(value: string) {
+    console.log(value);
+
     switch (value) {
       case 'github':
         window.open(data.social.github, '_blank');

@@ -63,3 +63,10 @@ body {
     }
   }
 }
+
+.scrollingText span {
+  &:hover {
+    color: #ffffff;
+    cursor: none;
+  }
+}
