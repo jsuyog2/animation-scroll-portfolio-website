@@ -237,14 +237,14 @@ export class InfiniteGridComponent {
         closeCard(e, true)
       }
     }
-    backdrop.ontouchend = (e: any) => {
+    backdrop.ontouchstart = (e: any) => {
       if (e.target.className === 'detail') {
         closeCard(e, true)
       }
     }
     const gridContainer: any = document.querySelector('.mask')
     gridContainer.onclick = openCard
-    gridContainer.ontouchend = openCard
+    gridContainer.ontouchstart = openCard
 
     const closeBtn: any = document.getElementById('closeBtn')
     closeBtn.onclick = closeCard
