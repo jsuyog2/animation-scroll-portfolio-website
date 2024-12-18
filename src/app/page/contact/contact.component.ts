@@ -87,6 +87,8 @@ export class ContactComponent {
     return `${date_month} ${date_year}`;
   }
   initalLoad() {
+    const page: any = document.querySelector('.contact-page');
+    page.style.opacity = 1;
     setTimeout(() => {
       gsap.set(`.exp-content .timeline-item`, {
         y: 50,
@@ -199,7 +201,7 @@ export class ContactComponent {
           trigger: '.about-section',
           start: 'top 50%',
           end: 'bottom 90%',
-          scrub: true
+          scrub: true,
         },
       });
     }, 150);
