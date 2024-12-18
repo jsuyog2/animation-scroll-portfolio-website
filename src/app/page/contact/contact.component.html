@@ -1,1 +1,223 @@
-<p>contact works!</p>
+<!-- <div class="row px-md-5 min-vh-100 banner-section align-content-center section"></div> -->
+<div
+  class="row px-md-5 py-5 sec-section align-content-center section d-flex align-items-baseline"
+>
+  <div
+    id="exp-content-col"
+    class="col-12 col-lg-6 align-content-center text-center text-md-start"
+  >
+    <div class="about-section-header about-section-row">
+      <h1 class="scrollingText text-center">Experience</h1>
+    </div>
+    <div class="exp-content w-100 d-flex">
+      <div class="timeline-container">
+        <div class="timeline">
+          <div class="timeline-line"></div>
+          <div class="timeline-item" *ngFor="let item of experience">
+            <div class="timeline-content">
+              <span class="text-small">{{ item.duration }}</span>
+              <span class="text-semibold">{{ item.name }}</span>
+              <span class="text-italic">{{ item.role }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    id="edu-content-col"
+    class="col-12 col-lg-6 align-content-center text-center text-md-start"
+  >
+    <div class="about-section-header about-section-row">
+      <h1 class="scrollingText text-center">Education</h1>
+    </div>
+    <div class="edu-content w-100 d-flex">
+      <div class="timeline-container">
+        <div class="timeline">
+          <div class="timeline-line"></div>
+          <div class="timeline-item" *ngFor="let item of education">
+            <div class="timeline-content">
+              <span class="text-small">{{ item.year }}</span>
+              <span class="text-semibold">{{ item.degree }}</span>
+              <span class="text-normal">{{ item.name }}</span>
+              <span class="text-italic">{{ item.university }}</span>
+              <span class="text-bold">{{ item.marks }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row px-md-5 py-5 contact-section section">
+  <div class="col-md-6 col-12">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3772.5955974089784!2d73.11785829417005!3d18.99345921001696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7e83e1f23f23d%3A0xe3a106c431e3fd0a!2sPanvel%2C%20Navi%20Mumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1678268318982!5m2!1sen!2sin"
+      style="border: 0"
+      width="100%"
+      height="100%"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+  <div class="col-md-6 col-12 mt-4">
+    <form
+      class="row g-3 card-form"
+      action="mailto:jsuyog2@gmail.com"
+      method="post"
+      enctype="text/plain"
+    >
+      <div class="col-12">
+        <input
+          id="form_name"
+          type="text"
+          name="name"
+          class="form-control"
+          pAnimateOnScroll
+          enterClass="fadeinright"
+          leaveClass="fadeout"
+          placeholder="Full Name"
+          required="required"
+          data-error="Name is required."
+        />
+      </div>
+      <div class="col-12">
+        <input
+          id="form_email"
+          type="email"
+          name="email"
+          class="form-control"
+          enterClass="fadeinright"
+          leaveClass="fadeout"
+          placeholder="Email Address"
+          required="required"
+          data-error="Valid email is required."
+        />
+      </div>
+      <div class="col-12">
+        <input
+          id="form_subject"
+          type="text"
+          name="subject"
+          class="form-control"
+          enterClass="fadeinright"
+          leaveClass="fadeout"
+          placeholder="Subject"
+          required="required"
+          data-error="Subject is required."
+        />
+      </div>
+      <div class="col-12">
+        <textarea
+          id="form_message"
+          name="message"
+          class="form-control"
+          enterClass="fadeinright"
+          leaveClass="fadeout"
+          placeholder="Message"
+          rows="7"
+          required="required"
+          data-error="Please, leave me a message."
+          spellcheck="false"
+        ></textarea>
+      </div>
+      <div class="col-12 bottom-btn">
+        <button
+          type="submit"
+          class="btn btn-value align-self-center"
+          data-hover="Send message"
+        >
+          <div class="draw-svg"></div>
+          Send message
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- about section -->
+<div
+  class="row px-md-5 py-5 mx-2 about-section align-content-center position-relative section"
+>
+  <div class="col-12 text-center p-5 border rounded">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="header-title">Looking for a new talent?</h1>
+      </div>
+      <div class="col-12">
+        <h1 class="scrollingText animate">
+          <span
+            ngxClipboard
+            [cbContent]="data.contact?.value"
+            (mouseenter)="toggleCursorEvent()"
+            (mouseleave)="toggleCursorEvent()"
+            >j</span
+          >
+        </h1>
+      </div>
+      <div class="col-12 mt-5">
+        <div class="row">
+          <div class="col-12 col-md-3">
+            <div class="bottom-btn">
+              <button
+                class="cvButton about-section-btn btn btn-value"
+                data-hover="Donwload CV"
+                (onClick)="socialOpen('cv')"
+              >
+                <div class="draw-svg"></div>
+                Donwload CV
+              </button>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="bottom-btn">
+              <button
+                class="linkedInButton about-section-btn btn btn-value"
+                data-hover="LinkedIn"
+                (onClick)="socialOpen('cv')"
+              >
+                <div class="draw-svg"></div>
+                LinkedIn
+              </button>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="bottom-btn">
+              <button
+                class="githubButton about-section-btn btn btn-value"
+                data-hover="Github"
+                (onClick)="socialOpen('cv')"
+              >
+                <div class="draw-svg"></div>
+                Github
+              </button>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="bottom-btn">
+              <button
+                class="xButton about-section-btn btn btn-value"
+                (onClick)="socialOpen('cv')"
+                data-hover="X"
+              >
+                <div class="draw-svg"></div>
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer p-5">
+  <div class="row text-center">
+    <div class="col-12 col-md-4 h-vh-75"><span>©2024 Suyog Jadhav.</span></div>
+    <div class="col-12 col-md-4">
+      <span class="position-relative"
+        ><span class="available"></span>Available for a full-time position</span
+      >
+    </div>
+    <div class="col-12 col-md-4"><span>Made by Suyog Jadhav.</span></div>
+  </div>
+</div>
